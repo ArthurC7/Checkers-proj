@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.Icon;
+import javax.swing.JButton;
 
 public class SquareIcon implements Icon {
 	
@@ -31,6 +32,14 @@ public class SquareIcon implements Icon {
 
 	public int getIconWidth() {
 		return width;
+	}
+	
+	public int getX() {
+		return x;
+	}
+	
+	public int getY() {
+		return y;
 	}
 
 	public void paintIcon(Component c, Graphics g, int x, int y) {

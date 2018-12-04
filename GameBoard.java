@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class GameBoard extends JPanel{
+public class GameBoard extends JFrame{
 
 	private int squareSize;
 	private static final int SQUARE_SIZE = 8;
@@ -15,10 +15,11 @@ public class GameBoard extends JPanel{
 	private SquareIcon[][] board;
 	
 	public GameBoard(int size){
+		super.setSize(size, size);
 		boardSize = size;
 		squareSize = size/8;
 		moveLength = Math.sqrt((squareSize*squareSize)+(squareSize*squareSize));
-		board = new SquareIcon[8][8];
+		board = new SquareIcon[SQUARE_SIZE][SQUARE_SIZE];
 	}
 	
 	public double getMoveLength(){
@@ -28,17 +29,19 @@ public class GameBoard extends JPanel{
 	public void makeBoard(){
 		int rowOffset = 0;
 		
-		for(int j = 0; j < 7; j++){
+		for(int j = 0; j < 7; j+=2){
 			printOddRow(rowOffset, j);
 			rowOffset+=squareSize;
-			j++;
-			printEvenRow(rowOffset, j);
+			printEvenRow(rowOffset, j+1);
 			rowOffset+=squareSize;
 		}
 		
 		for(SquareIcon[] boardY : board){
 			for(SquareIcon i : boardY){
-				super.add(new JLabel(i));
+				JLabel label = new JLabel(i);
+				label.setBounds(i.getX(), i.getY(), i.getIconHeight(), i.getIconHeight());
+				super.add(label);
+				System.out.println("Label added");
 			}
 		}
 		super.setSize(boardSize, boardSize);
@@ -48,11 +51,11 @@ public class GameBoard extends JPanel{
 		int columnOffset = 0;
 		int columnNumber = 0;
 		
-		for(int i = 0; i < 4; i++){
-			board [rowNumber][i + columnNumber] = new SquareIcon(squareSize, columnOffset, rowOffset, "Black");
+		for(int i = 0; i < 7; i+=2){
+			board [rowNumber][i] = new SquareIcon(squareSize, rowOffset, columnOffset, "Black");
 			columnOffset+=squareSize;
 			columnNumber++;
-			board [rowNumber][i + columnNumber] = new SquareIcon(squareSize, columnOffset, rowOffset, "Red");
+			board [rowNumber][i + 1] = new SquareIcon(squareSize, rowOffset, columnOffset, "Red");
 			columnOffset+=squareSize;
 		}
 		
@@ -60,13 +63,11 @@ public class GameBoard extends JPanel{
 	
 	public void printEvenRow(int rowOffset, int rowNumber){
 		int columnOffset = 0;
-		int columnNumber = 0;
 		
-		for(int i = 0; i < 4; i++){
-			board [rowNumber][i + columnNumber] = new SquareIcon(squareSize, columnOffset, rowOffset, "Red");
+		for(int i = 0; i < 7; i+=2){
+			board [rowNumber][i] = new SquareIcon(squareSize, rowOffset, columnOffset, "Red");
 			columnOffset+=squareSize;
-			columnNumber++;
-			board [rowNumber][i + columnNumber] = new SquareIcon(squareSize, columnOffset, rowOffset, "Black");
+			board [rowNumber][i + 1] = new SquareIcon(squareSize, rowOffset, columnOffset, "Black");
 			columnOffset+=squareSize;
 		}
 	}
@@ -75,9 +76,6 @@ public class GameBoard extends JPanel{
 		GameBoard b = new GameBoard(300);
 		b.makeBoard();
 		
-		JFrame frame = new JFrame();
-		frame.add(b);
-		frame.setSize(300, 300);
-		frame.setVisible(true);
+		b.setVisible(true);
 	}
 }
