@@ -2,26 +2,33 @@
 public class CheckerPiece {
 
 	private static final int POSITION_VALUE = 2;
+	private static final int KING_AT_BLACK = 7;
+	private static final int KING_AT_RED = 0;
 	
-	// true will be red, false will be black
-	private boolean hasPiece;
-	private boolean color;
 	private boolean isKing;
-	BoardPosition position;
-	boolean otherColor;
+	String color;
+	private int oppositeEnd;
 	
-	public CheckerPiece(boolean color, BoardPosition position, boolean otherColor) {
+	public CheckerPiece(String color) {
 		this.color = color;
-		this.position = position;
 		isKing = false;
-		this.otherColor = otherColor;
+		if(color.equals("Black")){
+			oppositeEnd = KING_AT_BLACK;
+		}
+		else{
+			oppositeEnd = KING_AT_RED;
+		}
 	}
 	
-	public void move(BoardPosition position) {
-		this.position = position;
+	public boolean isKing(){
+		return isKing;
 	}
 	
-	public BoardPosition getPosition() {
-		return position;
+	public String getColor(){
+		return color;
+	}
+	
+	public void kingMe(){
+		isKing = true;
 	}
 }

@@ -3,12 +3,20 @@ public class BoardPosition {
 
 	private int x;
 	private int y;
-	boolean taken;
+	private boolean hasPiece;
+	private CheckerPiece piece;
 	
 	public BoardPosition(int a, int b) {
 		x = a;
 		y = b;
-		taken = false;
+		hasPiece = false;
+	}
+	
+	public void addPiece(CheckerPiece piece){
+		if(hasPiece){
+			this.piece = piece;
+			hasPiece = true;
+		}
 	}
 	
 	public int getX() {
@@ -19,15 +27,18 @@ public class BoardPosition {
 		return y;
 	}
 	
-	public void takeSpace() {
-		taken = true;
+	public void removePiece(){
+		hasPiece = false;
 	}
 	
-	public void freeSpace() {
-		taken = false;
+	public CheckerPiece getCheckerPiece(){
+		if(!hasPiece){
+			throw new UnsupportedOperationException();
+		}
+		return piece;
 	}
 	
-	public boolean isTaken() {
-		return taken;
+	public boolean hasPiece(){
+		return hasPiece;
 	}
 }
