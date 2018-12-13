@@ -75,7 +75,7 @@ public class MainMenu {
 		option2.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+				new MultiplayerBoard();
 				
 			}
 			

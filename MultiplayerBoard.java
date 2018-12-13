@@ -13,8 +13,10 @@ public class MultiplayerBoard {
 	private GameBoard b;
 	
 	public MultiplayerBoard(){
-		b = new GameBoard(300);
+		GameBoard b = new GameBoard(300);
 		b.makeBoard();
+		Thread t = new Thread(b);
+		t.start();
 		
 		JFrame frame = new JFrame();
 		frame.setSize(350, 400);
