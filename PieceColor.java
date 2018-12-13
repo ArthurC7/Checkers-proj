@@ -1,4 +1,4 @@
 
 public enum PieceColor {
-	BLACK,RED;
+	BLACK,RED,NONE;
 }

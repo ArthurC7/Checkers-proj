@@ -8,24 +8,38 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class GameBoard extends JPanel{
+/**
+ * Large JPanel that will display the game board and all the pieces 
+ * on top of it. Done entirely with the Swing libraries, with most 
+ * visual assets being displayed as JLabels
+ * @author XBlad
+ *
+ */
+public class GameBoard extends JPanel implements Runnable{
 
 	private int squareSize;
 	private static final int SQUARE_SIZE = 8;
 	private double moveLength;
 	private int boardSize;
 	//private JPanel checkers;
+	private CheckerAlgorithm data;
 	
 	private static SquareIcon[][] board;
 	
+	/**
+	 * Constructor which will initialize some settings of the JPanel 
+	 * @param size
+	 */
 	public GameBoard(int size){
-		//checkers = new JPanel();
+		data = new CheckerAlgorithm();
 		boardSize = size;
 		moveLength = Math.sqrt((squareSize*squareSize)+(squareSize*squareSize));
 		board = new SquareIcon[SQUARE_SIZE][SQUARE_SIZE];
@@ -38,15 +52,17 @@ public class GameBoard extends JPanel{
 	}
 	
 	
-	
+	/**
+	 * Initializes the board by making SquareIcons and then displaying them 
+	 * using JLabel. The many for loops are used to make sure the squares are 
+	 * the right color. 
+	 */
 	public void makeBoard(){
 		for(int i = 0; i < 8; i++){
 			for(int j = 0; j < 8; j++){
 				if(i % 2 == 0 && j % 2 == 0){
-					SquareIcon icon = new SquareIcon(37, 0, 0, "Black");
+					Icon icon = new SquareIcon(37, 0, 0, "Black");
 					JLabel label = new JLabel(icon);
-					MouseListener m = new MouseActions(icon, label);
-					label.addMouseListener(m);
 					
 					super.add(label);
 					
@@ -103,63 +119,55 @@ public class GameBoard extends JPanel{
 		//super.addMouseListener(m);
 	}
 	
-	public void printOddRow(int rowOffset, int rowNumber){
-		int columnOffset = 0;
-		int columnNumber = 0;
-		
-		for(int i = 0; i < 7; i+=2){
-			board [rowNumber][i] = new SquareIcon(squareSize, columnOffset, rowOffset, "Black");
-			columnOffset+=squareSize;
-			board [rowNumber][i + 1] = new SquareIcon(squareSize, columnOffset, rowOffset, "Red");
-			columnOffset+=squareSize;
-		}
-		
-	}
-	
-	public void printEvenRow(int rowOffset, int rowNumber){
-		int columnOffset = 0;
-		
-		for(int i = 0; i < 7; i+=2){
-			board [rowNumber][i] = new SquareIcon(squareSize, columnOffset, rowOffset, "Red");
-			columnOffset+=squareSize;
-			board [rowNumber][i + 1] = new SquareIcon(squareSize, columnOffset, rowOffset, "Black");
-			columnOffset+=squareSize;
-		}
-	}
-	
-	public JPanel getBoard(){
-		JPanel panel = new JPanel();
-		for(SquareIcon[] boardY : board){
-			for(SquareIcon i : boardY){
-				JLabel label = new JLabel(i);
-				//label.setBounds(i.getX(), i.getY(), i.getIconHeight(), i.getIconHeight());
-				panel.add(label);
-				//System.out.println("Label added");
+	/**
+	 * Everytime a move is made, the JPanel is updated with the information from
+	 * CheckerAlgorithm, by accessing the BoardPosition[][] located within it 
+	 */
+	public void update(){
+		BoardPosition[][] pieces = data.getBoardData();
+		for(BoardPosition[] p1 : pieces){
+			for(BoardPosition p2 : p1){
+				if(p2.hasPiece()){
+					Icon i = new CheckerIcon(squareSize - 2, 0, 0, p2.getCheckerPiece().getColor());
+					JLabel label = new JLabel(i);
+					super.add(label);
+				}
 			}
 		}
-		return panel;
+		//To be added later: remove a piece implementation, or just move the piece
+		super.repaint();
 	}
 	
-	public static void main(String[] args){
-		GameBoard b = new GameBoard(300);
-		b.makeBoard();
+	/**
+	 * Taking the data from CheckerAlgorithm, selecting a piece on the board
+	 * will make it such that all possible moves to make are highlighted in blue. 
+	 */
+	public void displayMoves(){
+		//Implement MouseListener for each Icon to return which its position
+		//for x and y
+		int x = 0;
+		int y = 0;
+		ArrayList<PossiblePositions> p = data.getPossibleMoves(x, y);
+		for(PossiblePositions p1 : p){
+			SquareIcon s = board[p1.getToX()][p1.getToY()];
+			//Change squares that can be moved to from their own color to blue
+		}
+	}
+	
+	/**
+	 * Being given a move to make, this method just passes it on CheckerAlgorithm. 
+	 * Later functionality may be added later. 
+	 * @param p The position to move the piece to. 
+	 */
+	public void moveChosen(PossiblePositions p){
+		data.movePiece(p);
+	}
+	
+
+
+	@Override
+	public void run() {
 		
 		
-		JFrame frame = new JFrame();
-		JButton load = new JButton("Load");
-		load.setBounds(350, 0, 50, 50);
-		frame.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(5, 5, 5, 5);
-		//frame.add(load);
-		c.gridx = 0;
-		c.gridy = 0;
-		c.fill = c.NORTHEAST;
-		frame.add(b);
-		//frame.add(load, c);
-		//frame.setSize(500, 500);
-		frame.pack();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
 	}
 }

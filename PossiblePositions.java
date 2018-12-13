@@ -22,7 +22,7 @@ public class PossiblePositions{
 		piecesToRemove.add(take);
 	}
 	
-	public ArrayList<BoardPosition> piecesToRemove(){
+	public ArrayList<BoardPosition> getPiecesToRemove(){
 		return (ArrayList<BoardPosition>) piecesToRemove.clone();
 	}
 	

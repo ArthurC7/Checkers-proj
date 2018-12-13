@@ -6,10 +6,10 @@ public class CheckerPiece {
 	private static final int KING_AT_RED = 0;
 	
 	private boolean isKing;
-	String color;
+	PieceColor color;
 	private int oppositeEnd;
 	
-	public CheckerPiece(String color) {
+	public CheckerPiece(PieceColor color) {
 		this.color = color;
 		isKing = false;
 		if(color.equals("Black")){
@@ -24,11 +24,34 @@ public class CheckerPiece {
 		return isKing;
 	}
 	
-	public String getColor(){
+	public PieceColor getColor(){
 		return color;
 	}
 	
-	public void kingMe(){
+	public void setKing(){
 		isKing = true;
 	}
+	
+	public int getKingPosition(){
+		return oppositeEnd;
+	}
+	
+	public boolean equals(CheckerPiece other){
+		if(other == null){
+			return false;
+		}
+		if(isKing != other.isKing){
+			return false;
+		}
+		if(color != other.getColor()){
+			return false;
+		}
+		if(oppositeEnd != other.getKingPosition()){
+			return false;
+		}
+		return true;
+	}
 }
+
+
+
